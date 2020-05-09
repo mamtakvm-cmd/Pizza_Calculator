@@ -79,7 +79,7 @@ class Form extends Component{
            </div>
           </div>
                 if(this.state.size==="small"){
-                  console.log("hi")
+                 
                   if(this.state.quantity===1 && this.state.Person==="child")
                   {
                     this.setState({price:150})
@@ -87,7 +87,7 @@ class Form extends Component{
                   }
                   if(this.state.quantity===1 && this.state.Person==="parent")
                   {
-                    this.setState({price:300})
+                    this.setState({price:200})
           
                   }
                   if(this.state.quantity===2 && this.state.Person==="child")
@@ -161,7 +161,7 @@ class Form extends Component{
                 <input className="form-control" type="input" onChange={this.handleChangeLname.bind(this)} placeholder="Last Name"/>
                 <input className="form-control" type="input"  onChange={this.handleChangeAge.bind(this)} placeholder="Age"/>
                 <input className="form-control" type="input"  onChange={this.handleChangeSQuant.bind(this)} placeholder="quantity"/>
-               <input className="form-control" type="input"  onChange={this.handleChangePerson.bind(this)} placeholder="Child/Parent"/>
+               <input className="form-control" type="input"  onChange={this.handleChangePerson.bind(this)} placeholder="child/parent"/>
                 
                {order}
                

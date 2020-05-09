@@ -9,12 +9,7 @@ class Router extends Component{
     constructor(){
         super()
             
-        this.state={
-            id:'',
-            name:'',
-            
-
-        }
+       
     }
    
     render(){
