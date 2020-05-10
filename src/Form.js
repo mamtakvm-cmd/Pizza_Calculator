@@ -1,179 +1,127 @@
 import React,{Component} from 'react';
+import Result from './Result';
+import calculatePizzasNeeded from './Calculate';
+import Input from './Input';
 
 
-
-const url="http://localhost:8000/details";
-class Form extends Component{
-    constructor(){
-        super()
-        this.state={
-            
-            firstname:" ",
-            lastname:" ",
-            Age:" ",
-            quantity:" ",
-            Person:" ",
-            price:" ",
-            size:" "
-           
-        }
-        
-      } 
-      
-        
-          
-    handleChangeFname(event){
-        this.setState({firstname:event.target.value})
-    }
-    handleChangeLname(event){
-        this.setState({lastname:event.target.value})
-    }
-    handleChangeAge(event){
-        this.setState({Age:event.target.value})
-    }
-    handleChangeSQuant(event){
-        this.setState({quantity:event.target.value})
-        
-  }
-    handleChangePerson(event){
-        this.setState({Person:event.target.value})
-    }
-    handleChangeSize(event){
-      this.setState({size:event.target.value})
-    }
-    handleSubmit(){
-      var id = Math.floor(Math.random()*10000)
-      var data={
-          "id":id,
-          "firstname":this.state.firstname,
-          "lastname":this.state.lastname,
-          "Age":this.state.Age,
-          "quantity":this.state.quantity,
-          "Person":this.state.Person,
-          "price":this.state.price
-          
-            }
-           
-   fetch(url,{
-       method:'POST',
-       headers:{
-          'Accept':'application/json',
-           'Content-Type':'application/json'
-       },
-       body:JSON.stringify(data)
-
-   })
+const initialState = {
+ 
+  age:" ",
+  numberOfChild: " ",
+  numberOfParent: " ",
+  slicesPerChild: " ",
+  slicesPerParent: " ",
+  slicesPerPizza:" ",
   
+};
+
+export default class Form extends Component {
+  state = { ...initialState };
+updateSlicesPerPizza=event=>{
+  const slicesPerPizza = parseInt(event.target.value);
+  this.setState({slicesPerPizza});
 }
+updateAge = event =>{
+  const age=parseInt(event.target.value);
+  this.setState({age});
+}
+
+
+  updateNumberOfChild = event => {
+    const numberOfChild = parseInt(event.target.value);
+    this.setState({ numberOfChild });
+  };
+  updateNumberOfParent = event => {
+    const numberOfParent= parseInt(event.target.value);
+    this.setState({ numberOfParent });
+  };
+  updateSlicesPerChild = event => {
+    const  slicesPerChild= parseInt(event.target.value);
+    this.setState({  slicesPerChild });
+  };
+  updateSlicesPerParent = event => {
+    const  slicesPerParent= parseInt(event.target.value);
+    this.setState({  slicesPerParent });
+  };
+  reset = event => {
+    this.setState({ ...initialState });
+  };
+
+  render() {
+    const { numberOfChild,numberOfParent,slicesPerChild,  slicesPerParent,
+    age} = this.state;
+    const numberOfPizzas = calculatePizzasNeeded(
+      numberOfChild,
+      numberOfParent,
+      slicesPerChild, 
+      slicesPerParent,
+     
+    );
     
-    render(){
-        let order=" ";
+    let order=" ";
         
-            if(this.state.Age>=18){
-            order=<div>
-            <h3>Select Pizza Sizes</h3>
-              <div>
-              <input className="form-control" type="input"  onChange={this.handleChangeSize.bind(this)} placeholder="small/medium/large"/>
-             
-       
-           </div>
-          </div>
-                if(this.state.size==="small"){
-                 
-                  if(this.state.quantity===1 && this.state.Person==="child")
-                  {
-                    this.setState({price:150})
-                    
-                  }
-                  if(this.state.quantity===1 && this.state.Person==="parent")
-                  {
-                    this.setState({price:200})
-          
-                  }
-                  if(this.state.quantity===2 && this.state.Person==="child")
-                  {
-                    this.setState({price:200})
-                  }
-                  if(this.state.quantity===2 && this.state.Person==="parent")
-                  {
-                    this.setState({price:400})
-                  }
-                  if(this.state.quantity===3 && this.state.Person==="child")
-                  {
-                    this.setState({price:350})
-                  }
+    if(this.state.age>=18){
+    order=<div>
+    <h3>Select Pizza Sizes</h3>
+      <div>
+      <input className="form-control" type="input"  onChange={this.updateSlicesPerPizza} placeholder="small/medium/large enter 4/6/8 accordingly"/>
+     
+
+   </div>
+  </div>
+  }
+  if(this.state.age<18 && this.state.age!==" "){
+      order=<h2>Children cannot order</h2>
+  }
+  
+    return (
+      <div>
+          <div className="form-control">
+          <Input
+          label="Age"
+          type="number"
+          min={0}
+          value={age}
+          onChange={this.updateAge}
+        /><br/>
+        <Input
+          label="Number of Child"
+          type="number"
+          min={0}
+          value={numberOfChild}
+          onChange={this.updateNumberOfChild}
+        /><br/>
+        <Input
+          label="Number of Parent"
+          type="number"
+          min={0}
+          value={numberOfParent}
+          onChange={this.updateNumberOfParent}
+        /><br/>
+        <Input
+          label="Slices Per Child"
+          type="number"
+          min={0}
+          value={slicesPerChild}
+          onChange={this.updateSlicesPerChild}
+        /><br/>
+        <Input
+          label="Slices Per Parent"
+          type="number"
+          min={0}
+          value={slicesPerParent}
+          onChange={this.updateSlicesPerParent}
+        /><br/>
+        {order}
+        <Result amount={numberOfPizzas} />
+        <button className="full-width" onClick={this.reset}>
+          Reset
+        </button>
+      </div>
+      </div>
+     
+    );
+  }
+ }
 
 
-                  if(this.state.quantity===3 && this.state.Person==="parent")
-                  {
-                    this.setState({price:600})
-                  }
-                  if(this.state.quantity===4 && this.state.Person==="child")
-                  {
-                    this.setState({price:400})
-                  }
-                  if(this.state.quantity===4 && this.state.Person==="parent")
-                  {
-                    this.setState({price:800})
-                  }
-                  if(this.state.quantity===5 && this.state.Person==="child")
-                  {
-                    this.setState({price:550})
-                  }
-                  if(this.state.quantity===5 && this.state.Person==="parent")
-                  {
-                    this.setState({price:1000})
-                  }
-                  if(this.state.quantity===6 && this.state.Person==="child")
-                  {
-                    this.setState({price:600})
-                  }
-                  if(this.state.quantity===7 && this.state.Person==="child")
-                  {
-                    this.setState({price:750})
-                  }
-                  if(this.state.quantity===8 && this.state.Person==="child")
-                  {
-                    this.setState({price:800})
-                  }
-                  if(this.state.quantity===9 && this.state.Person==="child")
-                  {
-                    this.setState({price:950})
-                  }
-                }
-               
-            
-               
-                
-            }
-            if(this.state.Age<18 && this.state.Age!==" "){
-                order=<h2>Children cannot order</h2>
-            }
-            
-            
-           
-        return(
-            <div>
-                   
-            <div className="form-group">
-                <h1>Fill Your Details Here</h1>
-                <input className="form-control" type="input"  onChange={this.handleChangeFname.bind(this)} placeholder="First Name"/>
-                <input className="form-control" type="input" onChange={this.handleChangeLname.bind(this)} placeholder="Last Name"/>
-                <input className="form-control" type="input"  onChange={this.handleChangeAge.bind(this)} placeholder="Age"/>
-                <input className="form-control" type="input"  onChange={this.handleChangeSQuant.bind(this)} placeholder="quantity"/>
-               <input className="form-control" type="input"  onChange={this.handleChangePerson.bind(this)} placeholder="child/parent"/>
-                
-               {order}
-               
-              </div>
-              
-              <button type="button" className="btn btn-success" onClick={this.handleSubmit.bind(this)}>Submit</button>
-        
-         </div>
-          
-         
-        )
-    }
-}
-
-export default Form;
